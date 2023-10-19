@@ -63,7 +63,49 @@ const sendData = () =>{
         url : `${url}save/`,
         data : data,
         success: function(response){
-            console.log(response)
+            //console.log(response)
+            const results = response.results
+            quizForm.classList.add('not-visible')
+            //quizForm.remove()
+            
+            results.forEach(res =>{
+                const resDiv = document.createElement("div")
+                for (const [question, resp] of Object.entries(res)){
+                    // console.log(question)
+                    // console.log(resp)
+                    // console.log('*****')
+
+                    resDiv.innerHTML += question
+                    const cls = ['container', 'p-3', 'text-light', 'h3']
+                    resDiv.classList.add(...cls)
+
+                    if(resp === 'not answerd'){
+                        resDiv.innerHTML += '- not answered'
+                        resDiv.classList.add('bg-danger')
+                    }else{
+                        const answer = resp['answered']
+                        const correct = resp ['correct_answer']
+
+
+                        if (answer == correct){
+                            resDiv.classList.add('bg-success')
+                            resDiv.innerHTML += `  <br> Bonne reponse: ${answer}`
+                        }else{
+
+                            resDiv.classList.add('bg-danger')
+
+                            resDiv.innerHTML += `  <br>Bonne reponse: ${correct}`
+                            resDiv.innerHTML += `  <br> Votre reponse: ${answer}`
+                            resDiv.innerHTML += `  <br> <p style="text-align:center;color: black;">Echec</p> `
+
+                        }
+                    }
+                }
+
+                const body= document.getElementsByTagName('BODY')[0]
+                body.append(resDiv)
+            })
+            console.log(results)
         },
         error : function(error){
             console.log(error)
